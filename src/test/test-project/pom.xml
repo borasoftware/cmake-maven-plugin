@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.borasoftware.maven</groupId>
+	<artifactId>test-project</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.borasoftware.maven</groupId>
+				<artifactId>cmake-maven-plugin</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+
+				<configuration>
+					<!-- The root of the source code. Defaults to "${project.basedir}". -->
+					<cmakeSourceDirectory>src/test/test-project</cmakeSourceDirectory>
+
+					<!-- The folder in which the CMake build will be made. -->
+					<!-- Defaults to "${project.build.directory}/cmake". -->
+					<cmakeBinaryDirectory>src/test/test-project/target/cmake</cmakeBinaryDirectory>
+
+					<!-- Additional command line definitions specified when running CMake. -->
+					<!-- TODO maybe implement platform specific differences (or leave this to users using Maven profiles). -->
+					<cmakeDefines>
+						<CMAKE_INSTALL_PREFIX>/opt/usr</CMAKE_INSTALL_PREFIX>
+					</cmakeDefines>
+
+					<!-- The concurrency value specified to make (default to the number of cores). -->
+					<concurrency>4</concurrency>
+
+					<!-- Attach Make targets to the Maven compile phase. -->
+					<!-- If no targets are defined, Make will be run with its default target. -->
+					<compileTargets>
+						<compileTarget>Lib</compileTarget>
+						<compileTarget>App</compileTarget>
+					</compileTargets>
+
+					<!-- Attach Make targets to the Maven test-compile phase. -->
+					<!-- If no targets are defined, no Make targets will be run. -->
+					<testCompileTargets>
+						<testCompileTarget>UnitTests</testCompileTarget>
+					</testCompileTargets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

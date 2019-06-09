@@ -17,55 +17,36 @@
 
 package com.borasoftware.maven;
 
+import com.borasoftware.maven.builder.Utilities;
 import com.borasoftware.maven.cleaner.Cleaner;
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
 @Mojo(name = "clean", threadSafe = true, defaultPhase = LifecyclePhase.CLEAN)
-public class CMakeMavenCleanMojo extends AbstractMojo {
-	@Parameter(defaultValue = "${project.build.directory}", readonly = true, required = true)
-	private File projectBuildDirectory;
-
-	// The folder in which the CMake build will be made.
-	// Defaults to "${project.build.directory}/cmake".
-	@Parameter(defaultValue = "${cmake.project.build.directory}", readonly = true)
-	private File cmakeProjectBuildDirectory;
-
-	@Parameter(property = "maven.clean.verbose")
-	private Boolean verbose;
-
-	@Parameter(property = "maven.clean.followSymLinks", defaultValue = "false")
-	private boolean followSymLinks;
-
-	@Parameter(property = "maven.clean.skip", defaultValue = "false")
-	private boolean skip;
-
-	@Parameter(property = "maven.clean.failOnError", defaultValue = "true")
-	private boolean failOnError;
-
-	@Parameter(property = "maven.clean.retryOnError", defaultValue = "true")
-	private boolean retryOnError;
-
+public class CMakeCleanMojo extends AbstractCMakeMojo {
 	public void execute() throws MojoExecutionException {
-		final Path buildDirectory = cmakeProjectBuildDirectory != null
-			? cmakeProjectBuildDirectory.toPath()
-			: projectBuildDirectory.toPath().resolve("cmake");
+		final Log log = getLog();
+		final Path buildDirectory = Utilities.getCMakeBinaryDirectory(projectBuildDirectory, cmakeBinaryDirectory);
 
-		getLog().info("CMakeMavenCleanMojo: buildDirectory = " + buildDirectory);
+		log.debug("cmakeBinaryDirectory   = " + buildDirectory);
+		log.debug("verbose               = " + verbose);
+		log.debug("followSymLinks        = " + followSymLinks);
+		log.debug("skip                  = " + skip);
+		log.debug("failOnError           = " + failOnError);
+		log.debug("retryOnError          = " + retryOnError);
 
 		if (skip) {
-			getLog().info("Clean is skipped.");
+			log.info("Clean is skipped.");
 			return;
 		}
 
-		final Cleaner cleaner = new Cleaner(getLog(), isVerbose());
+		final Cleaner cleaner = new Cleaner(log, isVerbose());
 
 		try {
 			final File directoryItem = buildDirectory.toFile();

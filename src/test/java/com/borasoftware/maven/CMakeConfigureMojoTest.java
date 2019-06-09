@@ -17,26 +17,21 @@
 
 package com.borasoftware.maven;
 
-import org.apache.maven.plugin.testing.AbstractMojoTestCase;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import java.io.File;
-
-public class CMakeMavenConfigureMojoTest extends AbstractMojoTestCase {
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
+/**
+ * Perform CMake clean and configure steps.
+ */
+public class CMakeConfigureMojoTest extends AbstractCMakeMojoTest {
 	public void test() throws Exception {
-		final File pom = getTestFile("src/test/resources/test-project/pom.xml");
-		assertNotNull(pom);
-		assertTrue(pom.exists());
+		performClean();
+		performConfigure();
 
-		final CMakeMavenConfigureMojo mojo = (CMakeMavenConfigureMojo) lookupMojo("configure", pom);
-		assertNotNull(mojo);
-		mojo.execute();
+		final Path binDirectory = testFiles.cmakeTargetDirectory.toPath().resolve("bin");
+		assertTrue(Files.exists(binDirectory));
+
+		final Path libDirectory = testFiles.cmakeTargetDirectory.toPath().resolve("lib");
+		assertTrue(Files.exists(libDirectory));
 	}
 }

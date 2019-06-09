@@ -18,58 +18,50 @@
 package com.borasoftware.maven;
 
 import com.borasoftware.maven.builder.CMake;
-import org.apache.maven.plugin.AbstractMojo;
+import com.borasoftware.maven.builder.Utilities;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Mojo(name = "configure", defaultPhase = LifecyclePhase.VALIDATE)
-public class CMakeMavenConfigureMojo extends AbstractMojo {
-	@Parameter
-	private String outputDirectory;
-
-	@Parameter
-	private File projectBuildDirectory;
-
-	// The folder in which the CMake build will be made.
-	// Defaults to "${project.build.directory}/cmake".
-	@Parameter
-	private File cmakeProjectBuildDirectory;
-
-	// Additional command line definitions specified when running CMake.
-	// TODO platform specific differences.
-	@Parameter
-	private Map<String, String> defines;
-
+public class CMakeConfigureMojo extends AbstractCMakeMojo {
 	public void execute() throws MojoExecutionException {
-		final Path buildDirectory = cmakeProjectBuildDirectory != null
-			? cmakeProjectBuildDirectory.toPath()
-			: projectBuildDirectory.toPath().resolve("cmake");
+		final Log log = getLog();
+		final Path srcDirectory = Utilities.getCMakeSourceDirectory(projectBuildDirectory, cmakeSourceDirectory);
+		final Path binDirectory = Utilities.getCMakeBinaryDirectory(projectBuildDirectory, cmakeBinaryDirectory);
 
-		getLog().info("CMakeMavenConfigureMojo: buildDirectory = " + buildDirectory);
+		log.debug("cmakeSourceDirectory = " + srcDirectory);
+		log.debug("cmakeBinaryDirectory = " + binDirectory);
+		log.debug("cmakeDefines         = " + Utilities.getDefinesAsString(cmakeDefines));
+
+		try {
+			Files.createDirectories(binDirectory);
+		} catch (IOException e) {
+			throw new MojoExecutionException("Cannot create CMake build directory: " + binDirectory);
+		}
 
 		final List<String> parameters = processDefines();
+		parameters.add(srcDirectory.toAbsolutePath().toString());
 
-		parameters.add(buildDirectory.toAbsolutePath().toString());
-
-		CMake.runCMake(getLog(), buildDirectory, parameters);
+		CMake.runCMake(log, binDirectory, parameters);
 	}
 
 	private List<String> processDefines() {
 		final List<String> list = new ArrayList<>();
 
-		if (defines != null && !defines.isEmpty()) {
-			for (Map.Entry<String, String> entry : defines.entrySet()) {
+		if (cmakeDefines != null && !cmakeDefines.isEmpty()) {
+			for (Map.Entry<String, String> entry : cmakeDefines.entrySet()) {
 				final String key = entry.getKey();
 				final String value = entry.getValue();
-				list.add("-D" + key + (value != null && !value.isEmpty() ? ("=" + value) : ""));
+				list.add("-D" + key + "=" + value);
 			}
 		}
 
