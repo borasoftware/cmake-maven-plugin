@@ -4,18 +4,41 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.borasoftware.maven</groupId>
+	<groupId>com.borasoftware.balau</groupId>
 	<artifactId>cmake-maven-plugin</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>19.6.1</version>
 	<packaging>maven-plugin</packaging>
-	<name>CMake Maven plugin</name>
+	<name>Balau CMake Maven Plugin</name>
 	<url>https://github.com/borasoftware/cmake-maven-plugin</url>
+	<description>A Maven plugin that integrates CMake projects into the Maven build system.</description>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Bora Software</name>
+			<email>contact@borasoftware.com</email>
+			<organization>Bora Software</organization>
+			<organizationUrl>https://borasoftware.com</organizationUrl>
+		</developer>
+	</developers>
 
 	<properties>
 		<maven.version>3.3.9</maven.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
+
+	<scm>
+		<connection>scm:git:git://github.com/borasoftware/cmake-maven-plugin.git</connection>
+		<developerConnection>scm:git:ssh://github.com:borasoftware/cmake-maven-plugin.git</developerConnection>
+		<url>https://github.com/borasoftware/cmake-maven-plugin</url>
+	</scm>
 
 	<dependencies>
 		<dependency>
@@ -97,6 +120,63 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.1.0</version>
+
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.1.0</version>
+
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>sign</id>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
