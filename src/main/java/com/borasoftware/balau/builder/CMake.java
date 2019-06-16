@@ -15,7 +15,7 @@
  *
  */
 
-package com.borasoftware.maven.builder;
+package com.borasoftware.balau.builder;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
@@ -24,7 +24,19 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+/**
+ * Runs a CMake process with the supplied parameters.
+ *
+ * @author Nicholas Smethurst
+ */
 public class CMake {
+	/**
+	 * Run the CMake process.
+	 *
+	 * @param log the Maven plugin logger
+	 * @param buildDirectory the directory in which CMake will be executed
+	 * @param parameters the command line parameters to be specified to CMake
+	 */
 	public static void runCMake(Log log, Path buildDirectory, List<String> parameters) throws MojoExecutionException {
 		try {
 			final Process process = Utilities.createProcess("cmake", 1, buildDirectory, parameters);

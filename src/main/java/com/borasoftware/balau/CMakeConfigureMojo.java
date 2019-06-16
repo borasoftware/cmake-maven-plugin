@@ -15,10 +15,10 @@
  *
  */
 
-package com.borasoftware.maven;
+package com.borasoftware.balau;
 
-import com.borasoftware.maven.builder.CMake;
-import com.borasoftware.maven.builder.Utilities;
+import com.borasoftware.balau.builder.CMake;
+import com.borasoftware.balau.builder.Utilities;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -31,6 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Execute CMake to configure the build.
+ *
+ * @author Nicholas Smethurst
+ */
 @Mojo(name = "configure", defaultPhase = LifecyclePhase.VALIDATE)
 public class CMakeConfigureMojo extends AbstractCMakeMojo {
 	public void execute() throws MojoExecutionException {

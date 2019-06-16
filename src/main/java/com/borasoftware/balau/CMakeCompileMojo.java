@@ -15,10 +15,10 @@
  *
  */
 
-package com.borasoftware.maven;
+package com.borasoftware.balau;
 
-import com.borasoftware.maven.builder.Make;
-import com.borasoftware.maven.builder.Utilities;
+import com.borasoftware.balau.builder.Make;
+import com.borasoftware.balau.builder.Utilities;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -26,6 +26,11 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 import java.nio.file.Path;
 
+/**
+ * Execute Make on the compile targets specified in the plugin configuration.
+ *
+ * @author Nicholas Smethurst
+ */
 @Mojo(name = "compile", defaultPhase = LifecyclePhase.COMPILE)
 public class CMakeCompileMojo extends AbstractCMakeMojo {
 	public void execute() throws MojoExecutionException {

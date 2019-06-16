@@ -15,7 +15,7 @@
  *
  */
 
-package com.borasoftware.maven;
+package com.borasoftware.balau;
 
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 

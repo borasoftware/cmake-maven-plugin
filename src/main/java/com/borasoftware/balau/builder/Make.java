@@ -15,7 +15,7 @@
  *
  */
 
-package com.borasoftware.maven.builder;
+package com.borasoftware.balau.builder;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
@@ -24,7 +24,20 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+/**
+ * Runs a Make process on the specified targets and in the specified build director.
+ *
+ * @author Nicholas Smethurst
+ */
 public class Make {
+	/**
+	 * Run the Make process.
+	 *
+	 * @param log the Maven plugin logger
+	 * @param concurrency the number of make threads to run
+	 * @param buildDirectory the directory in which Make will be executed
+	 * @param targets the Make targets to build
+	 */
 	public static void runMakeTargets(Log log, int concurrency, Path buildDirectory, List<String> targets) throws MojoExecutionException {
 		try {
 			final Process process = Utilities.createProcess("make", concurrency, buildDirectory, targets);

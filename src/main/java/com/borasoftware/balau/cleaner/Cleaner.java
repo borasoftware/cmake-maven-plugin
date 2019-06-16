@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.borasoftware.maven.cleaner;
+package com.borasoftware.balau.cleaner;
 
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.shared.utils.Os;

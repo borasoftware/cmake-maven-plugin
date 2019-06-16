@@ -15,7 +15,7 @@
  *
  */
 
-package com.borasoftware.maven;
+package com.borasoftware.balau;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -24,6 +24,11 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Abstract based class of all the CMake mojos.
+ *
+ * @author Nicholas Smethurst
+ */
 abstract class AbstractCMakeMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project.build.directory}", readonly = true, required = true)
 	File projectBuildDirectory;

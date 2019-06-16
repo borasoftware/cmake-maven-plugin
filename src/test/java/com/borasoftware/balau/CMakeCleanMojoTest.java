@@ -15,7 +15,7 @@
  *
  */
 
-package com.borasoftware.maven;
+package com.borasoftware.balau;
 
 /**
  * Clean CMake build files and folders.

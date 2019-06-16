@@ -15,7 +15,7 @@
  *
  */
 
-package com.borasoftware.maven;
+package com.borasoftware.balau;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

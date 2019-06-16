@@ -15,10 +15,10 @@
  *
  */
 
-package com.borasoftware.maven;
+package com.borasoftware.balau;
 
-import com.borasoftware.maven.builder.Utilities;
-import com.borasoftware.maven.cleaner.Cleaner;
+import com.borasoftware.balau.builder.Utilities;
+import com.borasoftware.balau.cleaner.Cleaner;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -28,6 +28,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
+/**
+ * Cleans the CMake build directory.
+ *
+ * @author Nicholas Smethurst
+ */
 @Mojo(name = "clean", threadSafe = true, defaultPhase = LifecyclePhase.CLEAN)
 public class CMakeCleanMojo extends AbstractCMakeMojo {
 	public void execute() throws MojoExecutionException {

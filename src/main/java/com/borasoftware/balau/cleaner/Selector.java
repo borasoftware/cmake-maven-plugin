@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.borasoftware.maven.cleaner;
+package com.borasoftware.balau.cleaner;
 
 /**
  * Determines whether a path is selected for deletion. The pathnames used for method parameters will be relative to some

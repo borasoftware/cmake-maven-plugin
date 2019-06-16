@@ -15,7 +15,7 @@
  *
  */
 
-package com.borasoftware.maven.builder;
+package com.borasoftware.balau.builder;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
@@ -29,7 +29,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Shared logic used in the mojos.
+ *
+ * @author Nicholas Smethurst
+ */
 public class Utilities {
+	/**
+	 * Given the optional CMake source directory parameter, determine the actual CMake source directory.
+	 *
+	 * @param projectBuildDirectory the Maven project build directory
+	 * @param cmakeSourceDirectory the CMake source directory parameter (may be null)
+	 * @return a path to the CMake source directory to use during the build
+	 * @throws MojoExecutionException sanity check (should not throw)
+	 */
 	public static Path getCMakeSourceDirectory(File projectBuildDirectory, File cmakeSourceDirectory) throws MojoExecutionException {
 		if (cmakeSourceDirectory != null) {
 			return cmakeSourceDirectory.toPath();
@@ -42,6 +55,14 @@ public class Utilities {
 		return projectBuildDirectory.toPath().resolve("cmake");
 	}
 
+	/**
+	 * Given the optional CMake binary directory parameter, determine the actual CMake binary directory.
+	 *
+	 * @param projectBuildDirectory the Maven project build directory
+	 * @param cmakeBinaryDirectory the CMake binary directory parameter (may be null)
+	 * @return a path to the CMake binary directory to use during the build
+	 * @throws MojoExecutionException sanity check (should not throw)
+	 */
 	public static Path getCMakeBinaryDirectory(File projectBuildDirectory, File cmakeBinaryDirectory) throws MojoExecutionException {
 		if (cmakeBinaryDirectory != null) {
 			return cmakeBinaryDirectory.toPath();
@@ -54,6 +75,12 @@ public class Utilities {
 		return projectBuildDirectory.toPath().resolve("cmake");
 	}
 
+	/**
+	 * Get the default concurrency if the specified concurrency is zero, otherwise return the specified concurrency.
+	 *
+	 * @param concurrency the specified concurrency or zero if the default concurrency should be used
+	 * @return the default concurrency if the specified concurrency is zero, otherwise return the specified concurrency
+	 */
 	public static int getConcurrency(int concurrency) {
 		if (concurrency > 1) {
 			return concurrency;
@@ -62,6 +89,13 @@ public class Utilities {
 		return Runtime.getRuntime().availableProcessors();
 	}
 
+	/**
+	 * Concatenate the supplied targets for logging purposes.
+	 *
+	 * @param targets the targets
+	 * @param returnDefault when set to true, return the default string instead
+	 * @return the targets concatenated
+	 */
 	public static String getTargetsAsString(List<String> targets, boolean returnDefault) {
 		if (targets == null || targets.isEmpty()) {
 			return returnDefault ? "<default>" : "";
@@ -78,6 +112,13 @@ public class Utilities {
 		return builder.toString();
 	}
 
+	/**
+	 * Get the supplied CMake command line definitions as a string for logging purposes.
+	 *
+	 * @param defines the definitions
+	 * @return the definitions concatenated
+	 * @throws MojoExecutionException if a definition does not have a value supplied
+	 */
 	public static String getDefinesAsString(Map<String, String> defines) throws MojoExecutionException {
 		if (defines == null || defines.isEmpty()) {
 			return "";
@@ -101,7 +142,20 @@ public class Utilities {
 		return builder.toString();
 	}
 
-	static Process createProcess(String command, int concurrency, Path buildDirectory, List<String> arguments) throws IOException {
+	/**
+	 * Create a new process with the specified command line arguments.
+	 *
+	 * @param command the command
+	 * @param concurrency specific to the Make process, specifies the required concurrency
+	 * @param buildDirectory the working directory in which the process will launch
+	 * @param arguments the command line arguments
+	 * @return a new process
+	 * @throws IOException if an I/O error occurs
+	 */
+	static Process createProcess(String command,
+	                             int concurrency,
+	                             Path buildDirectory,
+	                             List<String> arguments) throws IOException {
 		final List<String> commandLine = new ArrayList<>();
 
 		commandLine.add(command);
@@ -125,6 +179,19 @@ public class Utilities {
 		return builder.start();
 	}
 
+	/**
+	 * Log the process' stdout to the Maven logger and wait for the process to complete.
+	 *
+	 * @param command the original command supplied to the process (for error logging purposes)
+	 * @param log the Maven logger
+	 * @param process the process
+	 * @exception  IOException  If an I/O error occurs
+	 * @throws InterruptedException if the current thread is
+	 *         {@linkplain Thread#interrupt() interrupted} by another
+	 *         thread while it is waiting, then the wait is ended and
+	 *         an {@link InterruptedException} is thrown.
+	 * @throws MojoExecutionException if the exit status of the process is non-zero
+	 */
 	static void runProcess(String command, Log log, Process process) throws IOException, InterruptedException, MojoExecutionException {
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 		String line;

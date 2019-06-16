@@ -15,16 +15,16 @@
  *
  */
 
-package com.borasoftware.maven;
+package com.borasoftware.balau;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Perform CMake clean, configure and compile steps.
+ * Perform CMake clean, configure and test-compile steps.
  */
-public class CMakeCompileMojoTest extends AbstractCMakeMojoTest {
+public class CMakeTestCompileMojoTest extends AbstractCMakeMojoTest {
 	public void test() throws Exception {
 		performClean();
 		performConfigure();
@@ -33,15 +33,11 @@ public class CMakeCompileMojoTest extends AbstractCMakeMojoTest {
 		assertNotNull(pom);
 		assertTrue(pom.exists());
 
-		final CMakeCompileMojo mojo = (CMakeCompileMojo) lookupMojo("compile", pom);
+		final CMakeTestCompileMojo mojo = (CMakeTestCompileMojo) lookupMojo("test-compile", pom);
 		assertNotNull(mojo);
 		mojo.execute();
 
-		final Path appExecutable = testFiles.cmakeTargetDirectory.toPath().resolve("bin").resolve("App");
-		assertTrue(Files.exists(appExecutable));
-
-		// TODO library for other platforms.
-		final Path libFile = testFiles.cmakeTargetDirectory.toPath().resolve("lib").resolve("libLib.a");
-		assertTrue(Files.exists(libFile));
+		final Path unitTestExecutable = testFiles.cmakeTargetDirectory.toPath().resolve("bin").resolve("UnitTests");
+		assertTrue(Files.exists(unitTestExecutable));
 	}
 }
