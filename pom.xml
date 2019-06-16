@@ -35,8 +35,8 @@
 	</properties>
 
 	<scm>
-		<connection>scm:git:git://github.com/borasoftware/cmake-maven-plugin.git</connection>
-		<developerConnection>scm:git:ssh://github.com:borasoftware/cmake-maven-plugin.git</developerConnection>
+		<connection>scm:git:ssh://github.com/borasoftware/cmake-maven-plugin.git</connection>
+		<developerConnection>scm:git:ssh://github.com/borasoftware/cmake-maven-plugin.git</developerConnection>
 		<url>https://github.com/borasoftware/cmake-maven-plugin</url>
 	</scm>
 
