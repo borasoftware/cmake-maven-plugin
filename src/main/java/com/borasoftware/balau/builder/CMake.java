@@ -23,6 +23,7 @@ import org.apache.maven.plugin.logging.Log;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Runs a CMake process with the supplied parameters.
@@ -36,10 +37,15 @@ public class CMake {
 	 * @param log the Maven plugin logger
 	 * @param buildDirectory the directory in which CMake will be executed
 	 * @param parameters the command line parameters to be specified to CMake
+	 * @param environmentVariables a map containing extra environment variables (may be null or empty)
+	 * @throws MojoExecutionException if an error occurs
 	 */
-	public static void runCMake(Log log, Path buildDirectory, List<String> parameters) throws MojoExecutionException {
+	public static void runCMake(Log log,
+	                            Path buildDirectory,
+	                            List<String> parameters,
+	                            Map<String, String> environmentVariables) throws MojoExecutionException {
 		try {
-			final Process process = Utilities.createProcess("cmake", 1, buildDirectory, parameters);
+			final Process process = Utilities.createProcess("cmake", 1, buildDirectory, parameters, environmentVariables);
 			Utilities.runProcess("cmake", log, process);
 		} catch (InterruptedException e) {
 			throw new MojoExecutionException("CMake command was interrupted.", e);

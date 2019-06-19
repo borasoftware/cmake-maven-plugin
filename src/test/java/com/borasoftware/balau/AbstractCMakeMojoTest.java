@@ -23,15 +23,13 @@ import java.io.File;
 import java.io.IOException;
 
 abstract class AbstractCMakeMojoTest extends AbstractMojoTestCase {
-	static final String testProjectLocation = "src/test/test-project";
-
 	class TestFiles {
+
 		final File pom;
 		final File targetDirectory;
 		final File cmakeTargetDirectory;
 		final File testTargetFile;
 		final File testTargetDirectory;
-
 		TestFiles(File pom, File targetDirectory, File cmakeTargetDirectory, File testTargetFile, File testTargetDirectory) {
 			this.pom = pom;
 			this.targetDirectory = targetDirectory;
@@ -39,9 +37,15 @@ abstract class AbstractCMakeMojoTest extends AbstractMojoTestCase {
 			this.testTargetFile = testTargetFile;
 			this.testTargetDirectory = testTargetDirectory;
 		}
+
 	}
 
+	final String testProjectLocation;
 	TestFiles testFiles;
+
+	AbstractCMakeMojoTest(String testProjectLocation) {
+		this.testProjectLocation = testProjectLocation;
+	}
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -56,7 +60,7 @@ abstract class AbstractCMakeMojoTest extends AbstractMojoTestCase {
 	}
 
 	void performClean() throws Exception {
-		final File pom = getTestFile(AbstractCMakeMojoTest.testProjectLocation + "/pom.xml");
+		final File pom = getTestFile(testProjectLocation + "/pom.xml");
 		assertNotNull(pom);
 		assertTrue(pom.exists());
 
@@ -76,7 +80,7 @@ abstract class AbstractCMakeMojoTest extends AbstractMojoTestCase {
 	}
 
 	private TestFiles locateTestFiles() {
-		final File pom = AbstractMojoTestCase.getTestFile(AbstractCMakeMojoTest.testProjectLocation + "/pom.xml");
+		final File pom = AbstractMojoTestCase.getTestFile(testProjectLocation + "/pom.xml");
 		final File targetDirectory = new File(pom.getParentFile(), "target");
 		final File cmakeTargetDirectory = new File(targetDirectory, "cmake");
 
@@ -102,6 +106,4 @@ abstract class AbstractCMakeMojoTest extends AbstractMojoTestCase {
 		testFiles.cmakeTargetDirectory.delete();
 		testFiles.targetDirectory.delete();
 	}
-
-	AbstractCMakeMojoTest() {}
 }

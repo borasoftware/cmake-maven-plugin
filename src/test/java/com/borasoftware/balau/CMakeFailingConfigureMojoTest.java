@@ -17,17 +17,26 @@
 
 package com.borasoftware.balau;
 
+import org.apache.maven.plugin.MojoExecutionException;
+
 /**
- * Clean CMake build files and folders.
+ * Perform CMake clean and configure steps.
  */
-public class CMakeCleanMojoTest extends AbstractCMakeMojoTest {
-	public CMakeCleanMojoTest() {
-		super("src/test/test-project1");
+public class CMakeFailingConfigureMojoTest extends AbstractCMakeMojoTest {
+	public CMakeFailingConfigureMojoTest() {
+		super("src/test/test-project2");
 	}
 
 	public void test() throws Exception {
-		assertTrue(testFiles.testTargetFile.exists());
+		boolean threw = false;
 		performClean();
-		assertFalse(testFiles.testTargetFile.exists());
+
+		try {
+			performConfigure();
+		} catch (MojoExecutionException e) {
+			threw = true;
+		}
+
+		assertTrue(threw);
 	}
 }

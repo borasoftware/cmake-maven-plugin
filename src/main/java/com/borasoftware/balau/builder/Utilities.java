@@ -26,8 +26,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Shared logic used in the mojos.
@@ -35,6 +38,12 @@ import java.util.Map;
  * @author Nicholas Smethurst
  */
 public class Utilities {
+	//
+	// In order to avoid clashes with Maven properties, environment
+	// variable placeholders must be specified with a %VAR% syntax.
+	//
+	private static final Pattern ENV_VAR_PLACEHOLDER_REGEX = Pattern.compile("%[a-zA-Z0-9_-]+%");
+
 	/**
 	 * Given the optional CMake source directory parameter, determine the actual CMake source directory.
 	 *
@@ -149,13 +158,15 @@ public class Utilities {
 	 * @param concurrency specific to the Make process, specifies the required concurrency
 	 * @param buildDirectory the working directory in which the process will launch
 	 * @param arguments the command line arguments
+	 * @param environmentVariables a map containing extra environment variables (may be null or empty)
 	 * @return a new process
 	 * @throws IOException if an I/O error occurs
 	 */
 	static Process createProcess(String command,
 	                             int concurrency,
 	                             Path buildDirectory,
-	                             List<String> arguments) throws IOException {
+	                             List<String> arguments,
+	                             Map<String, String> environmentVariables) throws IOException, MojoExecutionException {
 		final List<String> commandLine = new ArrayList<>();
 
 		commandLine.add(command);
@@ -175,6 +186,8 @@ public class Utilities {
 
 		builder.directory(buildDirectory.toFile());
 		builder.redirectErrorStream(true);
+
+		updateEnvironment(builder.environment(), environmentVariables);
 
 		return builder.start();
 	}
@@ -204,6 +217,68 @@ public class Utilities {
 
 		if (exitStatus != 0) {
 			throw new MojoExecutionException(command + " command failed with exit status of " + exitStatus);
+		}
+	}
+
+	//
+	// Update the environment of the supplied process builder if additional environment variables have been specified.
+	// Any existing referenced environment variables within the supplied environment variables will be expanded.
+	//
+	static void updateEnvironment(Map<String, String> processEnvironment,
+	                              Map<String, String> suppliedEnvironmentVariables) throws MojoExecutionException {
+		if (suppliedEnvironmentVariables == null || suppliedEnvironmentVariables.isEmpty()) {
+			// No environment variables supplied.
+			return;
+		}
+
+		try {
+			final Map<String, String> originalEnvironment = new HashMap<>(processEnvironment);
+
+			for (Map.Entry<String, String> entry : suppliedEnvironmentVariables.entrySet()) {
+				final String name = entry.getKey();
+				final String value = entry.getValue();
+				final Matcher matcher = ENV_VAR_PLACEHOLDER_REGEX.matcher(value);
+				int start, end;
+
+				if (matcher.find()) {
+					final StringBuilder newValue = new StringBuilder();
+
+					start = matcher.start();
+					end = matcher.end();
+					newValue.append(value, 0, start);
+
+					// Extract environment variable name (remove leading and trailing % characters).
+					String originalEnvironmentName = value.substring(start + 1, end - 1);
+					String originalEnvironmentValue = originalEnvironment.get(originalEnvironmentName);
+
+					// Add the value if such an environment variable exists in the process builder's environment.
+					if (originalEnvironmentValue != null) {
+						newValue.append(originalEnvironmentValue);
+					}
+
+					while (matcher.find()) {
+						start = matcher.start();
+						newValue.append(value, end, start);
+						end = matcher.end();
+
+						// Extract environment variable name (remove leading and trailing % characters).
+						originalEnvironmentName = value.substring(start + 1, end - 1);
+						originalEnvironmentValue = originalEnvironment.get(originalEnvironmentName);
+
+						// Add the value if such an environment variable exists in the process builder's environment.
+						if (originalEnvironmentValue != null) {
+							newValue.append(originalEnvironmentValue);
+						}
+					}
+
+					processEnvironment.put(name, newValue.toString());
+				} else {
+					// No placeholders to expand.. set the environment variable as is.
+					processEnvironment.put(name, value);
+				}
+			}
+		} catch (UnsupportedOperationException | IllegalArgumentException e) {
+			throw new MojoExecutionException("Failed to update environment due to a restriction of the operating system: ", e);
 		}
 	}
 

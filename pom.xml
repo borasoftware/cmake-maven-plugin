@@ -104,7 +104,8 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<directory>src/test/test-project/target</directory>
+							<directory>src/test/test-project1/target</directory>
+							<directory>src/test/test-project2/target</directory>
 						</fileset>
 					</filesets>
 				</configuration>

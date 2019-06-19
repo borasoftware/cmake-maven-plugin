@@ -42,6 +42,6 @@ public class CMakeTestCompileMojo extends AbstractCMakeMojo {
 		log.debug("concurrency           = " + j);
 		log.debug("targets               = " + Utilities.getTargetsAsString(testCompileTargets, false));
 
-		Make.runMakeTargets(getLog(), j, binDirectory, testCompileTargets);
+		Make.runMakeTargets(getLog(), j, binDirectory, testCompileTargets, environmentVariables);
 	}
 }

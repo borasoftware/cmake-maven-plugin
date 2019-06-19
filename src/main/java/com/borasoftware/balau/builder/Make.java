@@ -23,6 +23,7 @@ import org.apache.maven.plugin.logging.Log;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Runs a Make process on the specified targets and in the specified build director.
@@ -37,10 +38,19 @@ public class Make {
 	 * @param concurrency the number of make threads to run
 	 * @param buildDirectory the directory in which Make will be executed
 	 * @param targets the Make targets to build
+	 * @param environmentVariables a map containing extra environment variables (may be null or empty)
+	 * @throws MojoExecutionException if an error occurs
 	 */
-	public static void runMakeTargets(Log log, int concurrency, Path buildDirectory, List<String> targets) throws MojoExecutionException {
+	public static void runMakeTargets(Log log,
+	                                  int concurrency,
+	                                  Path buildDirectory,
+	                                  List<String> targets,
+	                                  Map<String, String> environmentVariables) throws MojoExecutionException {
 		try {
-			final Process process = Utilities.createProcess("make", concurrency, buildDirectory, targets);
+			final Process process = Utilities.createProcess(
+				"make", concurrency, buildDirectory, targets, environmentVariables
+			);
+
 			Utilities.runProcess("make", log, process);
 		} catch (InterruptedException e) {
 			throw new MojoExecutionException("Make command was interrupted.", e);

@@ -73,4 +73,8 @@ abstract class AbstractCMakeMojo extends AbstractMojo {
 	// Additional command line definitions specified when running CMake.
 	@Parameter
 	Map<String, String> cmakeDefines;
+
+	// Additional environment variables specified when running CMake and Make.
+	@Parameter
+	Map<String, String> environmentVariables;
 }

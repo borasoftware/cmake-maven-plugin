@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.borasoftware.balau</groupId>
-	<artifactId>test-project</artifactId>
+	<artifactId>test-project1</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
@@ -14,11 +14,11 @@
 
 				<configuration>
 					<!-- The root of the source code. Defaults to "${project.basedir}". -->
-					<cmakeSourceDirectory>src/test/test-project</cmakeSourceDirectory>
+					<cmakeSourceDirectory>src/test/test-project1</cmakeSourceDirectory>
 
 					<!-- The folder in which the CMake build will be made. -->
 					<!-- Defaults to "${project.build.directory}/cmake". -->
-					<cmakeBinaryDirectory>src/test/test-project/target/cmake</cmakeBinaryDirectory>
+					<cmakeBinaryDirectory>src/test/test-project1/target/cmake</cmakeBinaryDirectory>
 
 					<!-- Additional command line definitions specified when running CMake. -->
 					<!-- TODO maybe implement platform specific differences (or leave this to users using Maven profiles). -->

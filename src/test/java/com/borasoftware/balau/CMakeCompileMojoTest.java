@@ -25,6 +25,10 @@ import java.nio.file.Path;
  * Perform CMake clean, configure and compile steps.
  */
 public class CMakeCompileMojoTest extends AbstractCMakeMojoTest {
+	public CMakeCompileMojoTest() {
+		super("src/test/test-project1");
+	}
+
 	public void test() throws Exception {
 		performClean();
 		performConfigure();

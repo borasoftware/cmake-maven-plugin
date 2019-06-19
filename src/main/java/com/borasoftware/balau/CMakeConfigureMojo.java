@@ -56,7 +56,7 @@ public class CMakeConfigureMojo extends AbstractCMakeMojo {
 		final List<String> parameters = processDefines();
 		parameters.add(srcDirectory.toAbsolutePath().toString());
 
-		CMake.runCMake(log, binDirectory, parameters);
+		CMake.runCMake(log, binDirectory, parameters, environmentVariables);
 	}
 
 	private List<String> processDefines() {
