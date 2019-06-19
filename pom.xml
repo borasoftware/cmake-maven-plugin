@@ -6,7 +6,7 @@
 
 	<groupId>com.borasoftware.balau</groupId>
 	<artifactId>cmake-maven-plugin</artifactId>
-	<version>19.6.2</version>
+	<version>19.6.3-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 	<name>Balau CMake Maven Plugin</name>
 	<url>https://github.com/borasoftware/cmake-maven-plugin</url>
