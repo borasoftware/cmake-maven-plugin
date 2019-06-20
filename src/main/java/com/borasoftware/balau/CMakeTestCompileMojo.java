@@ -34,14 +34,21 @@ import java.nio.file.Path;
 @Mojo(name = "test-compile", defaultPhase = LifecyclePhase.TEST_COMPILE)
 public class CMakeTestCompileMojo extends AbstractCMakeMojo {
 	public void execute() throws MojoExecutionException {
+		checkParameters();
+
+		if (testCompileTargets == null || testCompileTargets.isEmpty()) {
+			// Nothing to compile.
+			return;
+		}
+
 		final Log log = getLog();
 		final int j = Utilities.getConcurrency(concurrency);
 		final Path binDirectory = Utilities.getCMakeBinaryDirectory(projectBuildDirectory, cmakeBinaryDirectory);
 
 		log.debug("cmakeBinaryDirectory   = " + binDirectory);
 		log.debug("concurrency           = " + j);
-		log.debug("targets               = " + Utilities.getTargetsAsString(testCompileTargets, false));
+		log.debug("targets               = " + Utilities.concatenateStringList(testCompileTargets, " ", ""));
 
-		Make.runMakeTargets(getLog(), j, binDirectory, testCompileTargets, environmentVariables);
+		Make.runMakeTargets(getLog(), j, binDirectory, testCompileTargets, makeOptions, environmentVariables, cmakePath);
 	}
 }

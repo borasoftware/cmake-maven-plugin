@@ -1,0 +1,9 @@
+#!/bin/sh
+
+MESSAGE="Incorrect binary test script called."
+
+echo "${MESSAGE}"
+echo "pwd = $(pwd)"
+echo "${MESSAGE}" > failMessage.txt
+
+exit 1

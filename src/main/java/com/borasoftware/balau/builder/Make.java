@@ -22,6 +22,7 @@ import org.apache.maven.plugin.logging.Log;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,25 +39,67 @@ public class Make {
 	 * @param concurrency the number of make threads to run
 	 * @param buildDirectory the directory in which Make will be executed
 	 * @param targets the Make targets to build
+	 * @param makeOptions extra command line options to pass to Make
 	 * @param environmentVariables a map containing extra environment variables (may be null or empty)
+	 * @param cmakePath optional path to CMake binary (if null or empty, the path is searched)
 	 * @throws MojoExecutionException if an error occurs
 	 */
 	public static void runMakeTargets(Log log,
 	                                  int concurrency,
 	                                  Path buildDirectory,
 	                                  List<String> targets,
-	                                  Map<String, String> environmentVariables) throws MojoExecutionException {
+	                                  List<String> makeOptions,
+	                                  Map<String, String> environmentVariables,
+	                                  String cmakePath) throws MojoExecutionException {
 		try {
-			final Process process = Utilities.createProcess(
-				"make", concurrency, buildDirectory, targets, environmentVariables
-			);
+			final String cmake = cmakePath != null && !cmakePath.isEmpty() ? cmakePath : "cmake";
+			final List<String> argumentsBase = new ArrayList<>();
 
-			Utilities.runProcess("make", log, process);
+			argumentsBase.add("--build");
+			argumentsBase.add(".");
+
+			if (concurrency > 1) {
+				argumentsBase.add("--parallel");
+				argumentsBase.add(Integer.toString(concurrency));
+			}
+
+			if (targets == null || targets.isEmpty()) {
+				// Default target.
+				runCommand(log, cmake, buildDirectory, argumentsBase, makeOptions, environmentVariables);
+			} else {
+				// Multiple targets.
+				for (String target : targets) {
+					final List<String> arguments = new ArrayList<>(argumentsBase);
+
+					arguments.add("--target");
+					arguments.add(target);
+
+					runCommand(log, cmake, buildDirectory, arguments, makeOptions, environmentVariables);
+				}
+			}
 		} catch (InterruptedException e) {
 			throw new MojoExecutionException("Make command was interrupted.", e);
 		} catch (IOException e) {
 			throw new MojoExecutionException("Make command threw an error.", e);
 		}
+	}
+
+	private static void runCommand(Log log,
+	                               String cmake,
+	                               Path buildDirectory,
+	                               List<String> arguments,
+	                               List<String> makeOptions,
+	                               Map<String, String> environmentVariables) throws IOException, MojoExecutionException, InterruptedException {
+		if (makeOptions != null && !makeOptions.isEmpty()) {
+			arguments.add("--");
+			arguments.addAll(makeOptions);
+		}
+
+		final Process process = Utilities.createProcess(
+			log, cmake, buildDirectory, arguments, environmentVariables
+		);
+
+		Utilities.runProcess("make", log, process);
 	}
 
 	private Make() {}

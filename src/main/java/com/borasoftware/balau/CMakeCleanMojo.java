@@ -36,10 +36,12 @@ import java.nio.file.Path;
 @Mojo(name = "clean", threadSafe = true, defaultPhase = LifecyclePhase.CLEAN)
 public class CMakeCleanMojo extends AbstractCMakeMojo {
 	public void execute() throws MojoExecutionException {
+		checkParameters();
+
 		final Log log = getLog();
 		final Path buildDirectory = Utilities.getCMakeBinaryDirectory(projectBuildDirectory, cmakeBinaryDirectory);
 
-		log.debug("cmakeBinaryDirectory   = " + buildDirectory);
+		log.debug("cmakeBinaryDirectory  = " + buildDirectory);
 		log.debug("verbose               = " + verbose);
 		log.debug("followSymLinks        = " + followSymLinks);
 		log.debug("skip                  = " + skip);

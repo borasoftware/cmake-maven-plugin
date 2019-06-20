@@ -18,6 +18,7 @@
 package com.borasoftware.balau;
 
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
@@ -30,15 +31,15 @@ import java.util.Map;
  * @author Nicholas Smethurst
  */
 abstract class AbstractCMakeMojo extends AbstractMojo {
-	@Parameter(defaultValue = "${project.build.directory}", readonly = true, required = true)
+	@Parameter(defaultValue = "${project.build.directory}", required = true)
 	File projectBuildDirectory;
 
 	// The folder in which the source code is located.
-	@Parameter(defaultValue = "${project.basedir}", readonly = true)
+	@Parameter(defaultValue = "${project.basedir}")
 	File cmakeSourceDirectory;
 
 	// The folder in which the CMake build will be made.
-	@Parameter(defaultValue = "${project.build.directory}/cmake", readonly = true)
+	@Parameter(defaultValue = "${project.build.directory}/cmake")
 	File cmakeBinaryDirectory;
 
 	@Parameter(defaultValue = "false")
@@ -57,17 +58,17 @@ abstract class AbstractCMakeMojo extends AbstractMojo {
 	boolean retryOnError;
 
 	// The concurrency value specified to make (default to the number of cores).
-	@Parameter(defaultValue = "0", readonly = true)
+	@Parameter(defaultValue = "0")
 	int concurrency;
 
 	// Attach Make targets to the Maven compile phase.
 	// If no targets are defined, Make will be run with its default target.
-	@Parameter(readonly = true)
+	@Parameter
 	List<String> compileTargets;
 
 	// Attach Make targets to the Maven test-compile phase.
 	// If no targets are defined, no Make targets will be run.
-	@Parameter(readonly = true)
+	@Parameter
 	List<String> testCompileTargets;
 
 	// Additional command line definitions specified when running CMake.
@@ -77,4 +78,18 @@ abstract class AbstractCMakeMojo extends AbstractMojo {
 	// Additional environment variables specified when running CMake and Make.
 	@Parameter
 	Map<String, String> environmentVariables;
+
+	// Optional path to CMake binary.
+	@Parameter
+	String cmakePath;
+
+	// Specify make options to be passed to the make build tool.
+	@Parameter
+	List<String> makeOptions;
+
+	void checkParameters() throws MojoExecutionException {
+		if (projectBuildDirectory == null || projectBuildDirectory.toString().isEmpty()) {
+			throw new MojoExecutionException("Defective system - ${project.build.directory} is not available.");
+		}
+	}
 }

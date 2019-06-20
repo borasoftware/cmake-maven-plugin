@@ -39,6 +39,8 @@ import java.util.Map;
 @Mojo(name = "configure", defaultPhase = LifecyclePhase.VALIDATE)
 public class CMakeConfigureMojo extends AbstractCMakeMojo {
 	public void execute() throws MojoExecutionException {
+		checkParameters();
+
 		final Log log = getLog();
 		final Path srcDirectory = Utilities.getCMakeSourceDirectory(projectBuildDirectory, cmakeSourceDirectory);
 		final Path binDirectory = Utilities.getCMakeBinaryDirectory(projectBuildDirectory, cmakeBinaryDirectory);
@@ -56,7 +58,7 @@ public class CMakeConfigureMojo extends AbstractCMakeMojo {
 		final List<String> parameters = processDefines();
 		parameters.add(srcDirectory.toAbsolutePath().toString());
 
-		CMake.runCMake(log, binDirectory, parameters, environmentVariables);
+		CMake.runCMake(log, binDirectory, parameters, environmentVariables, cmakePath);
 	}
 
 	private List<String> processDefines() {

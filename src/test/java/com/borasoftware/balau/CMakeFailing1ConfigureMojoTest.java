@@ -20,10 +20,10 @@ package com.borasoftware.balau;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * Perform CMake clean and configure steps.
+ * Fail to perform CMake configure step due to incorrect path supplied.
  */
-public class CMakeFailingConfigureMojoTest extends AbstractCMakeMojoTest {
-	public CMakeFailingConfigureMojoTest() {
+public class CMakeFailing1ConfigureMojoTest extends AbstractCMakeMojoTest {
+	public CMakeFailing1ConfigureMojoTest() {
 		super("src/test/test-project2");
 	}
 

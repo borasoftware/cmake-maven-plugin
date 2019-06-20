@@ -24,12 +24,12 @@ import java.io.IOException;
 
 abstract class AbstractCMakeMojoTest extends AbstractMojoTestCase {
 	class TestFiles {
-
 		final File pom;
 		final File targetDirectory;
 		final File cmakeTargetDirectory;
 		final File testTargetFile;
 		final File testTargetDirectory;
+
 		TestFiles(File pom, File targetDirectory, File cmakeTargetDirectory, File testTargetFile, File testTargetDirectory) {
 			this.pom = pom;
 			this.targetDirectory = targetDirectory;
@@ -37,7 +37,6 @@ abstract class AbstractCMakeMojoTest extends AbstractMojoTestCase {
 			this.testTargetFile = testTargetFile;
 			this.testTargetDirectory = testTargetDirectory;
 		}
-
 	}
 
 	final String testProjectLocation;
@@ -66,6 +65,7 @@ abstract class AbstractCMakeMojoTest extends AbstractMojoTestCase {
 
 		final CMakeCleanMojo mojo = (CMakeCleanMojo) lookupMojo("clean", pom);
 		assertNotNull(mojo);
+		mojo.projectBuildDirectory = getTestFile(testProjectLocation + "/target");
 		mojo.execute();
 	}
 
@@ -76,6 +76,7 @@ abstract class AbstractCMakeMojoTest extends AbstractMojoTestCase {
 
 		final CMakeConfigureMojo mojo = (CMakeConfigureMojo) lookupMojo("configure", pom);
 		assertNotNull(mojo);
+		mojo.projectBuildDirectory = getTestFile(testProjectLocation + "/target");
 		mojo.execute();
 	}
 

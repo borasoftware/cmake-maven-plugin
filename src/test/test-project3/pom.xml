@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.borasoftware.balau</groupId>
-	<artifactId>test-project2</artifactId>
+	<artifactId>test-project3</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
@@ -14,23 +14,14 @@
 
 				<configuration>
 					<!-- The root of the source code. Defaults to "${project.basedir}". -->
-					<cmakeSourceDirectory>src/test/test-project2</cmakeSourceDirectory>
+					<cmakeSourceDirectory>src/test/test-project3</cmakeSourceDirectory>
 
 					<!-- The folder in which the CMake build will be made. -->
 					<!-- Defaults to "${project.build.directory}/cmake". -->
-					<cmakeBinaryDirectory>src/test/test-project2/target/cmake</cmakeBinaryDirectory>
+					<cmakeBinaryDirectory>src/test/test-project3/target/cmake</cmakeBinaryDirectory>
 
-					<!-- Environment variables passed to the processes running CMake/Make. -->
-					<environmentVariables>
-						<!-- Throws an error because Make is not in the resulting path. -->
-						<PATH>/a/b/c/d/e/f</PATH>
-					</environmentVariables>
-
-					<!-- Additional command line definitions specified when running CMake. -->
-					<!-- TODO maybe implement platform specific differences (or leave this to users using Maven profiles). -->
-					<cmakeDefines>
-						<CMAKE_INSTALL_PREFIX>/opt/usr</CMAKE_INSTALL_PREFIX>
-					</cmakeDefines>
+					<!-- Optional path to CMake binary (if not specified, the path is searched for cmake). -->
+					<cmakePath>../../incorrectBinary/cmake</cmakePath>
 
 					<!-- The concurrency value specified to make (default to the number of cores). -->
 					<concurrency>4</concurrency>

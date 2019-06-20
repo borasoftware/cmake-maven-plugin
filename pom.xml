@@ -106,6 +106,8 @@
 						<fileset>
 							<directory>src/test/test-project1/target</directory>
 							<directory>src/test/test-project2/target</directory>
+							<directory>src/test/test-project3/target</directory>
+							<directory>src/test/acceptance/target</directory>
 						</fileset>
 					</filesets>
 				</configuration>

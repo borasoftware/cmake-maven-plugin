@@ -21,7 +21,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-include_directories(../testProjectSrc/main/cpp)
+include_directories(${CMAKE_SOURCE_DIR}/../testProjectSrc/main/cpp)
 include_directories(${CMAKE_BINARY_DIR})
 
 ################################### COMPILER ##################################
@@ -33,14 +33,14 @@ message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 
 #################################### MAIN #####################################
 
-add_library(Lib ../testProjectSrc/main/cpp/Lib.hpp ../testProjectSrc/main/cpp/Lib.cpp)
+add_library(Lib ${CMAKE_SOURCE_DIR}/../testProjectSrc/main/cpp/Lib.hpp ${CMAKE_SOURCE_DIR}/../testProjectSrc/main/cpp/Lib.cpp)
 
-add_executable(App ../testProjectSrc/main/cpp/App.cpp)
+add_executable(App ${CMAKE_SOURCE_DIR}/../testProjectSrc/main/cpp/App.cpp)
 target_link_libraries(App Lib)
 
 #################################### TEST #####################################
 
-add_executable(UnitTests ../testProjectSrc/test/cpp/LibTest.cpp)
+add_executable(UnitTests ${CMAKE_SOURCE_DIR}/../testProjectSrc/test/cpp/LibTest.cpp)
 target_link_libraries(UnitTests Lib)
 
 ################################# TEST RUNNER #################################

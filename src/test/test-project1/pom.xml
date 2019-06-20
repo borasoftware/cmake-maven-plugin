@@ -42,6 +42,17 @@
 						<testCompileTarget>UnitTests</testCompileTarget>
 					</testCompileTargets>
 				</configuration>
+
+				<executions>
+					<execution>
+						<goals>
+							<goal>clean</goal>
+							<goal>configure</goal>
+							<goal>compile</goal>
+							<goal>test-compile</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

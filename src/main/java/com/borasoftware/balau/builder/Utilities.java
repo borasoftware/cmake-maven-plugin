@@ -99,15 +99,16 @@ public class Utilities {
 	}
 
 	/**
-	 * Concatenate the supplied targets for logging purposes.
+	 * Concatenate the supplied string list for logging purposes.
 	 *
 	 * @param targets the targets
-	 * @param returnDefault when set to true, return the default string instead
-	 * @return the targets concatenated
+	 * @param delimiter the delimiter to separate the strings with
+	 * @param defaultValue a default value to return if the list is null or empty
+	 * @return the strings concatenated
 	 */
-	public static String getTargetsAsString(List<String> targets, boolean returnDefault) {
+	public static String concatenateStringList(List<String> targets, String delimiter, String defaultValue) {
 		if (targets == null || targets.isEmpty()) {
-			return returnDefault ? "<default>" : "";
+			return defaultValue != null ? defaultValue : "";
 		}
 
 		final StringBuilder builder = new StringBuilder();
@@ -115,7 +116,7 @@ public class Utilities {
 
 		for (String target : targets) {
 			builder.append(prefix).append(target);
-			prefix = " ";
+			prefix = delimiter;
 		}
 
 		return builder.toString();
@@ -154,16 +155,16 @@ public class Utilities {
 	/**
 	 * Create a new process with the specified command line arguments.
 	 *
+	 * @param log the Maven plugin logger
 	 * @param command the command
-	 * @param concurrency specific to the Make process, specifies the required concurrency
 	 * @param buildDirectory the working directory in which the process will launch
 	 * @param arguments the command line arguments
 	 * @param environmentVariables a map containing extra environment variables (may be null or empty)
 	 * @return a new process
 	 * @throws IOException if an I/O error occurs
 	 */
-	static Process createProcess(String command,
-	                             int concurrency,
+	static Process createProcess(Log log,
+	                             String command,
 	                             Path buildDirectory,
 	                             List<String> arguments,
 	                             Map<String, String> environmentVariables) throws IOException, MojoExecutionException {
@@ -171,16 +172,13 @@ public class Utilities {
 
 		commandLine.add(command);
 
-		if (concurrency > 1) {
-			commandLine.add("-j");
-			commandLine.add(Integer.toString(concurrency));
-		}
-
 		if (arguments != null) {
 			for (String argument : arguments) {
 				commandLine.add(argument.trim());
 			}
 		}
+
+		log.info("command line: " + concatenateStringList(commandLine, " ", ""));
 
 		final ProcessBuilder builder = new ProcessBuilder(commandLine);
 

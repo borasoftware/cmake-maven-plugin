@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6.3)
-project(TestProject VERSION 1.0.0)
+project(AcceptanceTestProject VERSION 1.0.0)
 
 ############################# CMAKE CONFIGURATION #############################
 

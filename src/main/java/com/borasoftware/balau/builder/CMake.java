@@ -38,14 +38,17 @@ public class CMake {
 	 * @param buildDirectory the directory in which CMake will be executed
 	 * @param parameters the command line parameters to be specified to CMake
 	 * @param environmentVariables a map containing extra environment variables (may be null or empty)
+	 * @param cmakePath optional path to CMake binary (if null or empty, the path is searched)
 	 * @throws MojoExecutionException if an error occurs
 	 */
 	public static void runCMake(Log log,
 	                            Path buildDirectory,
 	                            List<String> parameters,
-	                            Map<String, String> environmentVariables) throws MojoExecutionException {
+	                            Map<String, String> environmentVariables,
+	                            String cmakePath) throws MojoExecutionException {
 		try {
-			final Process process = Utilities.createProcess("cmake", 1, buildDirectory, parameters, environmentVariables);
+			final String cmake = cmakePath != null && !cmakePath.isEmpty() ? cmakePath : "cmake";
+			final Process process = Utilities.createProcess(log, cmake, buildDirectory, parameters, environmentVariables);
 			Utilities.runProcess("cmake", log, process);
 		} catch (InterruptedException e) {
 			throw new MojoExecutionException("CMake command was interrupted.", e);

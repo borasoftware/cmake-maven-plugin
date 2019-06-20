@@ -39,6 +39,7 @@ public class CMakeTestCompileMojoTest extends AbstractCMakeMojoTest {
 
 		final CMakeTestCompileMojo mojo = (CMakeTestCompileMojo) lookupMojo("test-compile", pom);
 		assertNotNull(mojo);
+		mojo.projectBuildDirectory = getTestFile(testProjectLocation + "/target");
 		mojo.execute();
 
 		final Path unitTestExecutable = testFiles.cmakeTargetDirectory.toPath().resolve("bin").resolve("UnitTests");
