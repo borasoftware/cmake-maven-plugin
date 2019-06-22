@@ -20,7 +20,7 @@
 					<!-- Defaults to "${project.build.directory}/cmake". -->
 					<cmakeBinaryDirectory>src/test/test-project2/target/cmake</cmakeBinaryDirectory>
 
-					<!-- Environment variables passed to the processes running CMake/Make. -->
+					<!-- Environment variables passed to the processes running CMake. -->
 					<environmentVariables>
 						<!-- Throws an error because Make is not in the resulting path. -->
 						<PATH>/a/b/c/d/e/f</PATH>
