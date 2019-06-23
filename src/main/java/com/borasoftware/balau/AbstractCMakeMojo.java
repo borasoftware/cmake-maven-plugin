@@ -42,6 +42,11 @@ abstract class AbstractCMakeMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project.build.directory}/cmake")
 	File cmakeBinaryDirectory;
 
+	// Explicitly specify the generator to be used in the configure goal.
+	// Default is to use default generator on Unix like platforms and "NMake Makefiles" on Windows platforms.
+	@Parameter
+	String generator;
+
 	@Parameter(defaultValue = "false")
 	Boolean verbose;
 

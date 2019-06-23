@@ -56,6 +56,17 @@ public class CMakeConfigureMojo extends AbstractCMakeMojo {
 		}
 
 		final List<String> parameters = processDefines();
+
+		// Set the generator if necessary.
+		final String osName = System.getProperty("os.name");
+
+		if (generator != null && !generator.isEmpty()) {
+			parameters.add("-G\"" + generator.trim() + "\"");
+		} else if (osName != null && osName.toLowerCase().trim().startsWith("windows")) {
+			parameters.add("-G\"NMake Makefiles\"");
+		}
+
+		parameters.addAll(processDefines());
 		parameters.add(srcDirectory.toAbsolutePath().toString());
 
 		CMake.runCMake(log, binDirectory, parameters, environmentVariables, cmakePath);
