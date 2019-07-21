@@ -45,10 +45,6 @@ public class CMakeConfigureMojo extends AbstractCMakeMojo {
 		final Path srcDirectory = Utilities.getCMakeSourceDirectory(projectBuildDirectory, cmakeSourceDirectory);
 		final Path binDirectory = Utilities.getCMakeBinaryDirectory(projectBuildDirectory, cmakeBinaryDirectory);
 
-		log.debug("cmakeSourceDirectory = " + srcDirectory);
-		log.debug("cmakeBinaryDirectory = " + binDirectory);
-		log.debug("cmakeDefines         = " + Utilities.getDefinesAsString(cmakeDefines));
-
 		try {
 			Files.createDirectories(binDirectory);
 		} catch (IOException e) {
@@ -79,7 +75,10 @@ public class CMakeConfigureMojo extends AbstractCMakeMojo {
 			for (Map.Entry<String, String> entry : cmakeDefines.entrySet()) {
 				final String key = entry.getKey();
 				final String value = entry.getValue();
-				list.add("-D" + key + "=" + value);
+
+				if (value != null && !value.isEmpty()) {
+					list.add("-D" + key + "=" + value);
+				}
 			}
 		}
 

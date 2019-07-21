@@ -102,13 +102,11 @@ public class Utilities {
 	 * Concatenate the supplied string list for logging purposes.
 	 *
 	 * @param targets the targets
-	 * @param delimiter the delimiter to separate the strings with
-	 * @param defaultValue a default value to return if the list is null or empty
 	 * @return the strings concatenated
 	 */
-	public static String concatenateStringList(List<String> targets, String delimiter, String defaultValue) {
+	private static String concatenateStringList(List<String> targets) {
 		if (targets == null || targets.isEmpty()) {
-			return defaultValue != null ? defaultValue : "";
+			return "";
 		}
 
 		final StringBuilder builder = new StringBuilder();
@@ -116,38 +114,7 @@ public class Utilities {
 
 		for (String target : targets) {
 			builder.append(prefix).append(target);
-			prefix = delimiter;
-		}
-
-		return builder.toString();
-	}
-
-	/**
-	 * Get the supplied CMake command line definitions as a string for logging purposes.
-	 *
-	 * @param defines the definitions
-	 * @return the definitions concatenated
-	 * @throws MojoExecutionException if a definition does not have a value supplied
-	 */
-	public static String getDefinesAsString(Map<String, String> defines) throws MojoExecutionException {
-		if (defines == null || defines.isEmpty()) {
-			return "";
-		}
-
-		final StringBuilder builder = new StringBuilder();
-		String prefix = "-D";
-
-		for (Map.Entry<String, String> define : defines.entrySet()) {
-			final String key = define.getKey();
-			final String value = define.getValue();
-
-			if (value == null || value.isEmpty()) {
-				// Skip.
-				continue;
-			}
-
-			builder.append(prefix).append(key.trim()).append("=").append(value.trim());
-			prefix = " -D";
+			prefix = " ";
 		}
 
 		return builder.toString();
@@ -179,7 +146,7 @@ public class Utilities {
 			}
 		}
 
-		log.info("command line: " + concatenateStringList(commandLine, " ", ""));
+		log.info("command line: " + concatenateStringList(commandLine));
 
 		final ProcessBuilder builder = new ProcessBuilder(commandLine);
 

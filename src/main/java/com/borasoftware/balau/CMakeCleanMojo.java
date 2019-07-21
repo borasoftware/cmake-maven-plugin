@@ -41,13 +41,6 @@ public class CMakeCleanMojo extends AbstractCMakeMojo {
 		final Log log = getLog();
 		final Path buildDirectory = Utilities.getCMakeBinaryDirectory(projectBuildDirectory, cmakeBinaryDirectory);
 
-		log.debug("cmakeBinaryDirectory  = " + buildDirectory);
-		log.debug("verbose               = " + verbose);
-		log.debug("followSymLinks        = " + followSymLinks);
-		log.debug("skip                  = " + skip);
-		log.debug("failOnError           = " + failOnError);
-		log.debug("retryOnError          = " + retryOnError);
-
 		if (skip) {
 			log.info("Clean is skipped.");
 			return;

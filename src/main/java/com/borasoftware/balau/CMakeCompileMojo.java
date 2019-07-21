@@ -20,7 +20,6 @@ package com.borasoftware.balau;
 import com.borasoftware.balau.builder.Make;
 import com.borasoftware.balau.builder.Utilities;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
@@ -36,13 +35,8 @@ public class CMakeCompileMojo extends AbstractCMakeMojo {
 	public void execute() throws MojoExecutionException {
 		checkParameters();
 
-		final Log log = getLog();
 		final int j = Utilities.getConcurrency(concurrency);
 		final Path binDirectory = Utilities.getCMakeBinaryDirectory(projectBuildDirectory, cmakeBinaryDirectory);
-
-		log.debug("cmakeBinaryDirectory  = " + binDirectory);
-		log.debug("concurrency           = " + j);
-		log.debug("targets               = " + Utilities.concatenateStringList(compileTargets, " ", "<default>"));
 
 		Make.runMakeTargets(getLog(), j, binDirectory, compileTargets, makeOptions, environmentVariables, cmakePath);
 	}
