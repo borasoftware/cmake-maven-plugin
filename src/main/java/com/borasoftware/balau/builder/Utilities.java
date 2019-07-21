@@ -142,7 +142,8 @@ public class Utilities {
 			final String value = define.getValue();
 
 			if (value == null || value.isEmpty()) {
-				throw new MojoExecutionException("Supplied CMake command line definition with key '" + key + "' has no value supplied with it.");
+				// Skip.
+				continue;
 			}
 
 			builder.append(prefix).append(key.trim()).append("=").append(value.trim());
